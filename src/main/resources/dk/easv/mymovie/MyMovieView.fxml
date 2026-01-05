@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="837.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView layoutX="196.0" layoutY="131.0" prefHeight="398.0" prefWidth="229.0" />
+      <ListView layoutX="20.0" layoutY="142.0" prefHeight="398.0" prefWidth="229.0" />
       <TableView layoutX="419.0" layoutY="142.0" prefHeight="398.0" prefWidth="378.0">
         <columns>
           <TableColumn prefWidth="49.60000801086426" text="Title" />
@@ -21,12 +21,11 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextField layoutX="22.0" layoutY="142.0" />
-      <Button layoutX="97.0" layoutY="27.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="185.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="237.0" layoutY="53.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="354.0" layoutY="66.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="495.0" layoutY="40.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="426.0" layoutY="53.0" mnemonicParsing="false" text="Button" />
+      <TextField layoutX="521.0" layoutY="79.0" />
+      <Button layoutX="97.0" layoutY="27.0" mnemonicParsing="false" text="Add Movie" />
+      <Button layoutX="185.0" layoutY="14.0" mnemonicParsing="false" text="Delete Movie" />
+      <Button layoutX="237.0" layoutY="53.0" mnemonicParsing="false" text="Add Category" />
+      <Button layoutX="354.0" layoutY="66.0" mnemonicParsing="false" text="Remove Category" />
+      <Button layoutX="419.0" layoutY="27.0" mnemonicParsing="false" text="Update Movie" />
    </children>
 </AnchorPane>
