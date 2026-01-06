@@ -1,5 +1,3 @@
-package dk.easv.mymovie;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,7 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyMovieView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dk.easv.views/MyMovieView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("MyMovie");
         stage.setScene(scene);
