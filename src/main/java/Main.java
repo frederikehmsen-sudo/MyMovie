@@ -9,7 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dk.easv.views/MyMovieView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyMovieView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("MyMovie");
         stage.setScene(scene);
