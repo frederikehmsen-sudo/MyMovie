@@ -6,35 +6,50 @@ import javafx.scene.control.*;
 
 public class MyMovieController {
 
+
     @FXML
-    private TextField txtSearchbar;
+    private Spinner spinnerIMDBSearch;
+    @FXML
+    private TextField txtFieldSearchBar;
+    @FXML
+    private Spinner spinnerPersonalRating;
+    @FXML
+    private Spinner spinnerIMDBRating;
+    @FXML
+    private Label lblFileSelected;
+    @FXML
+    private TextField txtYearInput;
+    @FXML
+    private TextField txtTimeInput;
+    @FXML
+    private TextField txtDirectorInput;
+    @FXML
+    private TextField txtTitleInput;
+    @FXML
+    private TableColumn colTime;
+    @FXML
+    private TableColumn colLastViewed;
+    @FXML
+    private TableColumn colDirector;
+    @FXML
+    private TableColumn colCategories;
     @FXML
     private TableColumn colPersonalRating;
     @FXML
     private TableColumn colImdbRating;
     @FXML
-    private TableColumn colCategory;
+    private TableColumn colYear;
     @FXML
     private TableColumn colTitle;
     @FXML
     private TableView tblMovie;
-    @FXML
-    private ListView lstCategory;
 
     @FXML
-    private void onPlay(ActionEvent actionEvent) {
+    private void onClickClear(ActionEvent actionEvent) {
     }
 
     @FXML
-    private void onDeleteMovie(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onAddCategory(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onRemoveCategory(ActionEvent actionEvent) {
+    private void onAddMovie(ActionEvent actionEvent) {
     }
 
     @FXML
@@ -42,6 +57,6 @@ public class MyMovieController {
     }
 
     @FXML
-    private void onAddMovie(ActionEvent actionEvent) {
+    private void onChooseFile(ActionEvent actionEvent) {
     }
 }
