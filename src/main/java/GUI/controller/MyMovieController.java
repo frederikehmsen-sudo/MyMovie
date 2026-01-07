@@ -5,8 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class MyMovieController {
-    @FXML
-    private Label welcomeText;
+
     @FXML
     private TextField txtSearchbar;
     @FXML
@@ -21,11 +20,6 @@ public class MyMovieController {
     private TableView tblMovie;
     @FXML
     private ListView lstCategory;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 
     @FXML
     private void onPlay(ActionEvent actionEvent) {
