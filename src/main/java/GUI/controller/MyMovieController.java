@@ -1,6 +1,7 @@
 package GUI.controller;
 
 import BE.Movie;
+import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -47,8 +49,18 @@ public class MyMovieController {
     @FXML private ListView<String> lwCategories;
 
     private MovieModel model;
+    private MovieDAO_DB dao;
 
     public void initialize() {
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+        colImdbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));
+        colPersonalRating.setCellValueFactory(new PropertyValueFactory<>("personalRating"));
+        colCategories.setCellValueFactory(new PropertyValueFactory<>("category"));
+        colDirector.setCellValueFactory(new PropertyValueFactory<>("director"));
+        colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        colLastViewed.setCellValueFactory(new PropertyValueFactory<>("lastViewed"));
+
         String[] categories = {"Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror",
                 "Musical", "Mystery", "Romance", "Science Fiction", "Sports", "Thriller", "Western"};
 
@@ -80,14 +92,13 @@ public class MyMovieController {
 
     @FXML
     private void onClickAddMovie(ActionEvent actionEvent) {
-        // 1️⃣ Read text input FIRST
+
         String title = txtTitleInput.getText().trim();
         String director = txtDirectorInput.getText().trim();
         String yearText = txtYearInput.getText().trim();
         String timeText = txtTimeInput.getText().trim();
         String fileLink = lblFileSelected.getText().trim();
 
-        // 2️⃣ Check for empty fields
         if (title.isEmpty() || director.isEmpty() || yearText.isEmpty() || timeText.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Missing Fields");
@@ -96,7 +107,6 @@ public class MyMovieController {
             return;
         }
 
-        // 3️⃣ Parse numbers safely
         int year;
         float time;
 
@@ -111,7 +121,6 @@ public class MyMovieController {
             return;
         }
 
-        // 4️⃣ Validate numeric values
         if (year <= 0 || time <= 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Values");
@@ -120,7 +129,6 @@ public class MyMovieController {
             return;
         }
 
-        // 5️⃣ Get spinner values
         float imdbRating = ((Double) spinnerIMDBRating.getValue()).floatValue();
         float personalRating = ((Double) spinnerPersonalRating.getValue()).floatValue();
         LocalDate lastView = LocalDate.now();
@@ -165,27 +173,35 @@ public class MyMovieController {
     @FXML
     private void onClickChooseFile(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose MP4 File");
+        fileChooser.setTitle("Choose MP4 or MPEG4 File");
 
-        File initialDir = new File("data/MP4_Files");
+        File initialDir = new File("data/MP4andMPEG4_Files");
         if (initialDir.exists() && initialDir.isDirectory()) {
             fileChooser.setInitialDirectory(initialDir); // Start in MP4 folder
         }
 
         File file = fileChooser.showOpenDialog(lblFileSelected.getScene().getWindow()); // Open dialog
 
-        if (file != null && file.getName().toLowerCase().endsWith(".mp")) {
-            Path dataFolder = Paths.get("data").toAbsolutePath();
-            Path selectedPath = file.toPath().toAbsolutePath();
-            Path relativePath = dataFolder.relativize(selectedPath);
-
-            lblFileSelected.setText(relativePath.toString()); // Store relative path
-        } else if (file != null) {
+        if (file != null) {
+            if (file.getName().toLowerCase().endsWith(".mp4") || file.getName().toLowerCase().endsWith(".mpeg4")) {
+                Path dataFolder = Paths.get("data").toAbsolutePath();
+                Path selectedPath = file.toPath().toAbsolutePath();
+                Path relativePath = dataFolder.relativize(selectedPath);
+                lblFileSelected.setText(relativePath.toString()); // Store relative path
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid File");
+                alert.setHeaderText("Only MP4 and MPEG4 files are allowed");
+                alert.setContentText("Please choose a file ending with .mp4 or .mpeg4");
+                alert.showAndWait();
+            }
+        } else if (file == null) {
             // Invalid file selected
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid File");
-            alert.setHeaderText("Only MP4 files are allowed");
-            alert.setContentText("Please choose a file ending with .mp4");
+            alert.setHeaderText("Only MP4 and MPEG4 files are allowed");
+            alert.setContentText("Please choose a file ending with .mp4 or .mpeg4");
             alert.showAndWait();
         }
     }

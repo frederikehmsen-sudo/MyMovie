@@ -1,10 +1,6 @@
 package BE;
 
-import DAL.ICategoryDataAccess;
-import javafx.collections.ObservableList;
-
 import java.time.LocalDate;
-import java.util.List;
 
 public class Movie {
 
