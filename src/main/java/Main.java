@@ -1,8 +1,11 @@
+import GUI.controller.MyMovieController;
+import GUI.model.MovieModel;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
@@ -15,11 +18,15 @@ import java.io.IOException;
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyMovieView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MyMovieView.fxml"));
+        Parent root = loader.load();
+
+        MyMovieController controller = loader.getController();
+        controller.setModel(new MovieModel());
+
         stage.setTitle("MyMovie");
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
     public static void main(String[] args) {

@@ -33,7 +33,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
 
     @Override
     public Movie createMovie(Movie newMovie) throws Exception {
-        String sql = "INSERT INTO dbo.Movie (title, imdbRating, filLink, lastView, personalRating, director, time, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO dbo.Movie (title, imdbRating, fileLink, lastView, personalRating, director, time, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -82,7 +82,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
 
     @Override
     public void updateMovie(Movie movie) throws Exception {
-        String sql = "UPDATE dbo.Movie SET title = ?, imdbRating = ?, fileLink = ?, personalRating = ?, director = ?, time = ?, year = ? WHERE MovieId = ?;";
+        String sql = "UPDATE dbo.Movie SET title = ?, imdbRating = ?, fileLink = ?, personalRating = ?, director = ?, time = ?, year = ? WHERE id = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -104,13 +104,13 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
     }
 
 
-    public void deleteMovie(int movieId) throws Exception {
-        String sql = "DELETE FROM dbo.Movie WHERE MovieId = ?;";
+    public void deleteMovie(int id) throws Exception {
+        String sql = "DELETE FROM dbo.Movie WHERE id = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1,movieId);
+            stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();

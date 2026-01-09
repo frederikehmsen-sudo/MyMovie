@@ -1,6 +1,7 @@
 package GUI.controller;
 
 import BE.Movie;
+import BLL.util.MyMovieSearcher;
 import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
 import javafx.beans.property.BooleanProperty;
@@ -50,6 +51,7 @@ public class MyMovieController {
 
     private MovieModel model;
     private MovieDAO_DB dao;
+    private MyMovieSearcher searcher;
 
     public void initialize() {
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -60,6 +62,17 @@ public class MyMovieController {
         colDirector.setCellValueFactory(new PropertyValueFactory<>("director"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         colLastViewed.setCellValueFactory(new PropertyValueFactory<>("lastViewed"));
+
+        // Spinners initialized
+        SpinnerValueFactory<Double> imdbSearchValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 0.0, 0.1);
+        spinnerIMDBSearch.setValueFactory(imdbSearchValueFactory);
+
+        SpinnerValueFactory<Double> imdbValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 0.0, 0.1);
+        spinnerIMDBRating.setValueFactory(imdbValueFactory);
+
+        SpinnerValueFactory<Double> personalValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 0.0, 0.1);
+        spinnerPersonalRating.setValueFactory(personalValueFactory);
+
 
         String[] categories = {"Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror",
                 "Musical", "Mystery", "Romance", "Science Fiction", "Sports", "Thriller", "Western"};
@@ -84,6 +97,16 @@ public class MyMovieController {
     }
     public void setModel(MovieModel model) {
         this.model = model;
+        this.searcher = new MyMovieSearcher();
+
+        try {
+            this.dao = new MovieDAO_DB();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Fill tables with observable data from model
+        tblMovie.setItems(model.getObservableMovies());
     }
 
     @FXML
@@ -92,12 +115,13 @@ public class MyMovieController {
 
     @FXML
     private void onClickAddMovie(ActionEvent actionEvent) {
-
         String title = txtTitleInput.getText().trim();
         String director = txtDirectorInput.getText().trim();
         String yearText = txtYearInput.getText().trim();
         String timeText = txtTimeInput.getText().trim();
         String fileLink = lblFileSelected.getText().trim();
+        float imdbRating = ((Double) spinnerIMDBRating.getValue()).floatValue();
+        float personalRating = ((Double) spinnerPersonalRating.getValue()).floatValue();
 
         if (title.isEmpty() || director.isEmpty() || yearText.isEmpty() || timeText.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -129,34 +153,18 @@ public class MyMovieController {
             return;
         }
 
-        float imdbRating = ((Double) spinnerIMDBRating.getValue()).floatValue();
-        float personalRating = ((Double) spinnerPersonalRating.getValue()).floatValue();
         LocalDate lastView = LocalDate.now();
 
         try {
-            Movie newMovie = new Movie(
-                    0,
-                    title,
-                    imdbRating,
-                    fileLink,
-                    lastView,
-                    personalRating,
-                    director,
-                    time,
-                    year
-            );
+            Movie newMovie = new Movie(0, title, imdbRating, fileLink, lastView, personalRating, director, time, year);
 
             model.createMovie(newMovie);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Movie Added");
             alert.setHeaderText("Movie successfully added!");
-            alert.setContentText(newMovie.getTitle() + " by " + newMovie.getDirector());
+            alert.setContentText(newMovie.getTitle());
             alert.showAndWait();
-
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
-
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Saving Movie");
@@ -168,6 +176,8 @@ public class MyMovieController {
 
     @FXML
     private void onClickUpdateMovie(ActionEvent actionEvent) {
+        // Movie selectedSong = tblMovie.getSelectionModel().getSelectedItem();
+        // if (selectedSong == null) return;
     }
 
     @FXML
