@@ -8,15 +8,20 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -222,5 +227,26 @@ public class MyMovieController {
 
     @FXML
     private void onClickClearText(ActionEvent actionEvent) {
+        txtTitleInput.clear();
+        txtDirectorInput.clear();
+        txtYearInput.clear();
+        txtTimeInput.clear();
+    }
+
+    @FXML
+    private void onClickOpenCategoryWindow(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/CategoryWindow.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+
+        stage.setTitle("Categories");
+        stage.setScene(scene);
+
+        // Pass model to the new controller
+        CategoryWindowController controller = loader.getController();
+        controller.setModel(model);
+
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }
