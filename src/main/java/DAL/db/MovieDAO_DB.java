@@ -3,13 +3,14 @@ package DAL.db;
 import BE.Category;
 import BE.Movie;
 import DAL.ICategoryDataAccess;
+import DAL.ICategoryOnMovieDataAccess;
 import DAL.IMovieDataAccess;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
+public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICategoryOnMovieDataAccess {
 
     private DBConnector databaseConnector = new DBConnector();
 
@@ -18,17 +19,58 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
 
     @Override
     public Category createCategory(Category newCategory) throws Exception {
-        return null;
+        String sql = "INSERT INTO dbo.Category (name) VALUES (?);";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, newCategory.getName());
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    newCategory.setId(rs.getInt(1));
+                }
+            }
+            return newCategory;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not create category", ex);
+        }
     }
 
     @Override
     public List<Category> getAllCategories() throws Exception {
-        return List.of();
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT * FROM Category ORDER BY name";
+        try (Connection conn = databaseConnector.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                categories.add(new Category(rs.getInt("id"), rs.getString("name")));
+            }
+            return categories;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get all categories", ex);
+        }
     }
 
     @Override
-    public void deleteCategory(Category category) throws Exception {
+    public void deleteCategory(int id) throws Exception {
+        String sql = "DELETE FROM dbo.Category WHERE id = ?;";
 
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not delete category from database.",ex);
+        }
     }
 
     @Override
@@ -71,7 +113,9 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                movies.add(createMovieFromResultSet(rs));
+                movies.add(new Movie(rs.getInt("id"), rs.getString("title"), rs.getFloat("imdbRating"),
+                        rs.getString("fileLink"), rs.getDate("lastView").toLocalDate(), rs.getFloat("personalRating"),
+                        rs.getString("director"), rs.getFloat("time"), rs.getInt("year")));
             }
             return movies;
         } catch (Exception ex) {
@@ -103,7 +147,6 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
         }
     }
 
-
     public void deleteMovie(int id) throws Exception {
         String sql = "DELETE FROM dbo.Movie WHERE id = ?;";
 
@@ -118,20 +161,86 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess {
         }
     }
 
+
     /**
-     * Helper method to create Movie object from ResultSet
+     * Assigns a category to a movie in the junction table
      */
-    private Movie createMovieFromResultSet(ResultSet rs) throws Exception {
-        return new Movie(
-                rs.getInt("id"),
-                rs.getString("title"),
-                rs.getFloat("imdbRating"),
-                rs.getString("fileLink"),
-                rs.getDate("lastView").toLocalDate(),
-                rs.getFloat("personalRating"),
-                rs.getString("director"),
-                rs.getFloat("time"),
-                rs.getInt("year")
-        );
-    };
+    public void addCategoryToMovie(int movieId, int categoryId) throws Exception {
+        String sql = "INSERT INTO dbo.MovieCategory (movieId, categoryId) VALUES (?, ?);";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, movieId);
+            stmt.setInt(2, categoryId);
+            stmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not add category to movie", ex);
+        }
+    }
+
+    /**
+     * Removes a category from a movie in the junction table
+     */
+    public void removeCategoryFromMovie(int movieId, int categoryId) throws Exception {
+        String sql = "DELETE FROM dbo.MovieCategory WHERE movieId = ? AND categoryId = ?;";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, movieId);
+            stmt.setInt(2, categoryId);
+            stmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not remove category from movie", ex);
+        }
+    }
+
+    /**
+     * Gets all categories assigned to a specific movie
+     */
+    public List<Category> getCategoriesForMovie(int movieId) throws Exception {
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT c.id, c.name FROM Category c " +
+                "INNER JOIN MovieCategory mc ON c.id = mc.categoryId " +
+                "WHERE mc.movieId = ? ORDER BY c.name";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, movieId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                categories.add(new Category(rs.getInt("id"), rs.getString("name")));
+            }
+            return categories;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get categories for movie", ex);
+        }
+    }
+
+    /**
+     * Removes all categories from a movie (useful when updating)
+     */
+    public void removeAllCategoriesFromMovie(int movieId) throws Exception {
+        String sql = "DELETE FROM dbo.MovieCategory WHERE movieId = ?;";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, movieId);
+            stmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not remove categories from movie", ex);
+        }
+    }
 }

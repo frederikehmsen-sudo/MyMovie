@@ -7,5 +7,5 @@ import java.util.List;
 public interface ICategoryDataAccess {
     Category createCategory(Category newCategory) throws Exception;
     List<Category> getAllCategories() throws Exception;
-    void deleteCategory(Category category) throws Exception;
+    void deleteCategory(int id) throws Exception;
 }

@@ -3,6 +3,7 @@ package BLL;
 import BE.Category;
 import BE.Movie;
 import DAL.ICategoryDataAccess;
+import DAL.ICategoryOnMovieDataAccess;
 import DAL.IMovieDataAccess;
 import DAL.db.MovieDAO_DB;
 
@@ -18,10 +19,12 @@ public class MovieManager {
 
     private IMovieDataAccess movieDataAccess;
     private ICategoryDataAccess categoryDataAccess;
+    private ICategoryOnMovieDataAccess categoryOnMovieDataAccess;
 
     public MovieManager() throws Exception {
         movieDataAccess = new MovieDAO_DB();
         categoryDataAccess = new MovieDAO_DB();
+        categoryOnMovieDataAccess = new MovieDAO_DB();
     }
 
     // Movies
@@ -57,6 +60,29 @@ public class MovieManager {
     }
 
     public void deleteCategory(Category selectedCategory) throws Exception {
-        categoryDataAccess.deleteCategory(selectedCategory);
+        categoryDataAccess.deleteCategory(selectedCategory.getId());
+    }
+
+    // Categories on Movies
+    public void addCategoryToMovie(Movie movie, Category category) throws Exception {
+        categoryOnMovieDataAccess.addCategoryToMovie(movie.getId(), category.getId());
+    }
+
+    public void removeCategoryFromMovie(Movie movie, Category category) throws Exception {
+        categoryOnMovieDataAccess.removeCategoryFromMovie(movie.getId(), category.getId());
+    }
+
+    public List<Category> getCategoriesForMovie(Movie movie) throws Exception {
+        return categoryOnMovieDataAccess.getCategoriesForMovie(movie.getId());
+    }
+
+    public void setCategoriesForMovie(Movie movie, List<Category> categories) throws Exception {
+        // Remove all existing categories first
+        categoryOnMovieDataAccess.removeAllCategoriesFromMovie(movie.getId());
+
+        // Add the new categories
+        for (Category category : categories) {
+            categoryOnMovieDataAccess.addCategoryToMovie(movie.getId(), category.getId());
+        }
     }
 }
