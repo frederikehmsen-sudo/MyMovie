@@ -113,9 +113,12 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                movies.add(new Movie(rs.getInt("id"), rs.getString("title"), rs.getFloat("imdbRating"),
+                Movie movie = new Movie(rs.getInt("id"), rs.getString("title"), rs.getFloat("imdbRating"),
                         rs.getString("fileLink"), rs.getDate("lastView").toLocalDate(), rs.getFloat("personalRating"),
-                        rs.getString("director"), rs.getFloat("time"), rs.getInt("year")));
+                        rs.getString("director"), rs.getFloat("time"), rs.getInt("year"));
+                // Load categories for a movie (all movies)
+                movie.setCategories(getCategoriesForMovie(movie.getId()));
+                movies.add(movie);
             }
             return movies;
         } catch (Exception ex) {

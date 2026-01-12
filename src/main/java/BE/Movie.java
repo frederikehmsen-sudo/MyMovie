@@ -1,6 +1,7 @@
 package BE;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Movie {
 
@@ -13,6 +14,7 @@ public class Movie {
     private float time;
     private String director;
     private int year;
+    private List<Category> categories;
 
     public Movie(int id, String title, float imdbRating, String fileLink, LocalDate lastView, float personalRating, String director, float time, int year) {
         this.id = id;
@@ -62,6 +64,10 @@ public class Movie {
         return year;
     }
 
+    public List<Category> getCategories() {
+      return categories;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -96,5 +102,9 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

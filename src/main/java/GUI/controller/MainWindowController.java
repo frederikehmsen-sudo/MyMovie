@@ -9,6 +9,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.SortedList;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,20 +26,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+
 public class MainWindowController {
 
-    @FXML private TableView tblMovie;
-    @FXML private TableColumn colTime;
-    @FXML private TableColumn colLastViewed;
-    @FXML private TableColumn colDirector;
-    @FXML private TableColumn colCategories;
-    @FXML private TableColumn colPersonalRating;
-    @FXML private TableColumn colImdbRating;
-    @FXML private TableColumn colYear;
-    @FXML private TableColumn colTitle;
+    @FXML private TableView<Movie> tblMovie;
+    @FXML private TableColumn<Movie, Float> colTime;
+    @FXML private TableColumn<Movie, java.time.LocalDate> colLastViewed;
+    @FXML private TableColumn<Movie, String> colDirector;
+    @FXML private TableColumn<Movie, String> colCategories;
+    @FXML private TableColumn<Movie, Float> colPersonalRating;
+    @FXML private TableColumn<Movie, Float> colImdbRating;
+    @FXML private TableColumn<Movie, Integer> colYear;
+    @FXML private TableColumn<Movie, String> colTitle;
 
-    @FXML private ListView lwCategoryFilter;
-    @FXML private Spinner spinnerIMDBSearch;
+    @FXML private ListView<Category> lwCategoryFilter;
+    @FXML private Spinner<Double> spinnerIMDBSearch;
     @FXML private TextField txtFieldSearchBar;
 
     private MovieModel model;
@@ -62,7 +64,17 @@ public class MainWindowController {
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colImdbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));
         colPersonalRating.setCellValueFactory(new PropertyValueFactory<>("personalRating"));
-        colCategories.setCellValueFactory(new PropertyValueFactory<>("category"));
+        // Skud ud til tutor Ervin og stackoverflow.
+        colCategories.setCellValueFactory((TableColumn.CellDataFeatures<Movie, String> cellData) -> {
+            Movie movie = cellData.getValue();
+            List<Category> categories = movie.getCategories();
+
+            String categoryNames = categories.stream()
+                    .map(Category::getName)
+                    .collect(java.util.stream.Collectors.joining(", "));
+
+            return new SimpleObjectProperty<>(categoryNames);
+        });
         colDirector.setCellValueFactory(new PropertyValueFactory<>("director"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         colLastViewed.setCellValueFactory(new PropertyValueFactory<>("lastView"));
