@@ -5,6 +5,7 @@ import BE.Movie;
 import BLL.MovieManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class MovieModel {
     private MovieManager movieManager; // Reference to business logic manager
     private ObservableList<Movie> movies; // Observable list of all movies
     private ObservableList<Category> categories; // Observable list of all categories
-    //private FilteredList<Movie> filteredList; // Filtered view of movies for search/filtering
+    private FilteredList<Movie> filteredList; // Filtered view of movies for search/filtering
 
     /**
      * Constructor initializes the model and loads all movies and categories from the manager.
@@ -29,6 +30,7 @@ public class MovieModel {
         // Load all categories from manager
         categories = FXCollections.observableArrayList();
         categories.addAll(movieManager.getAllCategories());
+        filteredList = new FilteredList<>(movies);
     }
 
     // MOVIES
@@ -48,7 +50,7 @@ public class MovieModel {
      * @throws Exception if search in MovieManager fails.
      */
     /*public void searchMovies(String query) throws Exception {
-        List<Movie> searchResults = movieManager.searchMovies(query);
+        List<Movie> searchResults = movieManager.searchMovie(query);
         movies.clear();
         movies.addAll(searchResults); // Update observable list
     }*/
@@ -57,8 +59,8 @@ public class MovieModel {
      * Returns the observable list of movies for UI binding.
      * @return ObservableList<Movie>
      */
-    public ObservableList<Movie> getObservableMovies() {
-        return movies;
+    public FilteredList<Movie> getObservableMovies() {
+        return filteredList;
     }
 
     /**
