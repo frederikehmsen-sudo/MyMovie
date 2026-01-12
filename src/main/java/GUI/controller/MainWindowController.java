@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +204,7 @@ public class MainWindowController {
      */
     @FXML
     private void onClickUpdateMovie(ActionEvent actionEvent) throws IOException {
-        Movie selectedMovie = (Movie) tblMovie.getSelectionModel().getSelectedItem();
+        Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
         if (selectedMovie == null) return;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MovieWindow.fxml"));
@@ -305,7 +306,12 @@ public class MainWindowController {
                 return;
             }
             Desktop.getDesktop().open(file);
-        } catch (IOException e) {
+            // Updates lastView to todays date
+            Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+                selectedMovie.setLastView(LocalDate.now());
+                model.updateMovie(selectedMovie);
+
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
@@ -325,7 +331,6 @@ public class MainWindowController {
                     openInMediaPlayer(movie.getFileLink());
                 }
             });
-
             return row;
         });
     }

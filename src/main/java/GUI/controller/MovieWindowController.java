@@ -171,7 +171,6 @@ public class MovieWindowController {
                 List<Category> selectedCategories = getSelectedCategories();
                 model.setCategoriesForMovie(editingMovie, selectedCategories);
 
-                // TODO
                 editingMovie.setCategories(selectedCategories);
 
                 // Close the window
@@ -186,7 +185,6 @@ public class MovieWindowController {
                 List<Category> selectedCategories = getSelectedCategories();
                 model.setCategoriesForMovie(createdMovie, selectedCategories);
 
-                // TODO
                 createdMovie.setCategories(selectedCategories);
 
                 // Close the window
