@@ -171,6 +171,9 @@ public class MovieWindowController {
                 List<Category> selectedCategories = getSelectedCategories();
                 model.setCategoriesForMovie(editingMovie, selectedCategories);
 
+                // TODO
+                editingMovie.setCategories(selectedCategories);
+
                 // Close the window
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();
@@ -182,6 +185,9 @@ public class MovieWindowController {
 
                 List<Category> selectedCategories = getSelectedCategories();
                 model.setCategoriesForMovie(createdMovie, selectedCategories);
+
+                // TODO
+                createdMovie.setCategories(selectedCategories);
 
                 // Close the window
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

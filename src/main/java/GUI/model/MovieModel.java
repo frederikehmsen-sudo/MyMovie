@@ -5,7 +5,6 @@ import BE.Movie;
 import BLL.MovieManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ public class MovieModel {
     private MovieManager movieManager; // Reference to business logic manager
     private ObservableList<Movie> movies; // Observable list of all movies
     private ObservableList<Category> categories; // Observable list of all categories
-    private FilteredList<Movie> filteredList; // Filtered view of movies for search/filtering
 
     /**
      * Constructor initializes the model and loads all movies and categories from the manager.
@@ -30,7 +28,6 @@ public class MovieModel {
         // Load all categories from manager
         categories = FXCollections.observableArrayList();
         categories.addAll(movieManager.getAllCategories());
-        filteredList = new FilteredList<>(movies);
     }
 
     // MOVIES
@@ -46,21 +43,11 @@ public class MovieModel {
     }
 
     /**
-     * Searches movies based on a query and updates the observable list.
-     * @throws Exception if search in MovieManager fails.
-     */
-    /*public void searchMovies(String query) throws Exception {
-        List<Movie> searchResults = movieManager.searchMovie(query);
-        movies.clear();
-        movies.addAll(searchResults); // Update observable list
-    }*/
-
-    /**
      * Returns the observable list of movies for UI binding.
      * @return ObservableList<Movie>
      */
-    public FilteredList<Movie> getObservableMovies() {
-        return filteredList;
+    public ObservableList<Movie> getObservableMovies() {
+        return movies;
     }
 
     /**
@@ -93,13 +80,8 @@ public class MovieModel {
      * @throws Exception if creation fails in MovieManager.
      */
     public Category createCategory(Category newCategory) throws Exception {
-        System.out.println("Trying to create category: " + newCategory.getName());
         Category categoryCreated = movieManager.createCategory(newCategory);
-        if (categoryCreated == null) {
-            System.out.println("MovieManager returned null!");
-            throw new Exception("Failed to create category in DB");
-        }
-        categories.add(categoryCreated); // Add to observable list for UI
+        categories.add(categoryCreated);
         return categoryCreated;
     }
 

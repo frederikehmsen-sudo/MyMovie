@@ -2,13 +2,13 @@ package GUI.controller;
 
 import BE.Category;
 import BE.Movie;
-import BLL.util.MyMovieSearcher;
 import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -25,7 +25,9 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainWindowController {
@@ -44,22 +46,14 @@ public class MainWindowController {
     @FXML private Spinner<Double> spinnerIMDBSearch;
     @FXML private TextField txtFieldSearchBar;
 
+    private Map<Category, BooleanProperty> categoryCheckBoxStates = new HashMap<>();
+    private FilteredList<Movie> filteredMovies;
     private MovieModel model;
     private MovieDAO_DB dao;
-    private MyMovieSearcher searcher;
+
     @FXML
     private Spinner spinnerPersonalSearch;
     private final ObservableList<Category> selectedCategories = FXCollections.observableArrayList();
-
-    public MainWindowController() {
-
-        try{
-        model = new MovieModel();
-    } catch (Exception e){
-        displayError(e);
-        e.printStackTrace();
-    }
-}
 
     public void initialize() {
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -81,9 +75,6 @@ public class MainWindowController {
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         colLastViewed.setCellValueFactory(new PropertyValueFactory<>("lastView"));
 
-        titleDoubleClick();
-        searchMovie();
-
         // Spinner initialized
         SpinnerValueFactory<Double> imdbSearchValueFactory
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 0.0, 0.1);
@@ -94,23 +85,48 @@ public class MainWindowController {
         spinnerPersonalSearch.setValueFactory(personalSearchValueFactory);
 
         lwCategoryFilter.setCellFactory(CheckBoxListCell.forListView(category -> {
-            BooleanProperty selected = new SimpleBooleanProperty(false);
-            selected.addListener((obs, wasSelected, isSelected) ->{
-                    if (isSelected) {
-                        selectedCategories.add(category);
-                    } else {
-                        selectedCategories.remove(category);
-                    }
-                    updateFilters();
+            // Get or create the boolean property for this category and store it in the map
+            BooleanProperty selected = categoryCheckBoxStates.computeIfAbsent(category,
+                    c -> new SimpleBooleanProperty(false));
+
+            selected.addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    selectedCategories.add(category);
+                } else {
+                    selectedCategories.remove(category);
+                }
+                updateFilters();
             });
             return selected;
         }));
+
+        titleDoubleClick();
+        openingReminder();
+    }
+
+    public void setModel(MovieModel model) {
+        this.model = model;
+
+        try {
+            this.dao = new MovieDAO_DB();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Create filtered list wrapping the observable list, and then wrap the filtered list in sorted list,
+        // so that we can sort between the different properties
+        filteredMovies = new FilteredList<>(model.getObservableMovies(), m -> true);
+        SortedList<Movie> sortedData = new SortedList<>(filteredMovies);
+        sortedData.comparatorProperty().bind(tblMovie.comparatorProperty());
+        tblMovie.setItems(sortedData);
+        lwCategoryFilter.setItems(model.getObservableCategories());
+
+        //Search filter
+        searchMovie();
     }
 
     private void searchMovie(){
         txtFieldSearchBar.textProperty().addListener((observableValue, oldValue, newValue) ->
                 updateFilters());
-
         spinnerIMDBSearch.valueProperty().addListener((obs, oldVal, newVal) ->
                 updateFilters());
         spinnerPersonalSearch.valueProperty().addListener((obs, oldVal, newVal) ->
@@ -118,19 +134,18 @@ public class MainWindowController {
         lwCategoryFilter.editableProperty().addListener((observable, oldValue, newValue) ->
                 updateFilters());
 
-        // Add listener for category selection if needed
-
-        updateFilters(); // Initial setup
+        updateFilters();
     }
 
     private void updateFilters() {
-        model.getObservableMovies().setPredicate(movie -> {
+        filteredMovies.setPredicate(movie -> {
             // Text search filter
             String searchText = txtFieldSearchBar.getText();
             if (searchText != null && !searchText.isEmpty()) {
                 String lowerCase = searchText.toLowerCase();
                 boolean matchesText = movie.getTitle().toLowerCase().contains(lowerCase) ||
-                        Integer.toString(movie.getYear()).contains(lowerCase) || movie.getDirector().toLowerCase().contains(lowerCase);
+                        Integer.toString(movie.getYear()).contains(lowerCase) ||
+                        movie.getDirector().toLowerCase().contains(lowerCase);
                 if (!matchesText) return false;
             }
 
@@ -139,9 +154,10 @@ public class MainWindowController {
             if (minRatingImdb != null && minRatingImdb > 0.0) {
                 if (movie.getImdbRating() < minRatingImdb) return false;
             }
+            // Personal rating filter
             Double minRatingPersonal = (Double) spinnerPersonalSearch.getValue();
             if (minRatingPersonal != null && minRatingPersonal > 0.0) {
-                if (movie.getImdbRating() < minRatingPersonal) return false;
+                if (movie.getPersonalRating() < minRatingPersonal) return false;
             }
 
             // Categories filter
@@ -160,23 +176,6 @@ public class MainWindowController {
         alert.setTitle("Something went wrong");
         alert.setHeaderText(t.getMessage());
         alert.showAndWait();
-    }
-
-
-    public void setModel(MovieModel model) {
-        this.model = model;
-        //this.searcher = new MyMovieSearcher();
-
-        try {
-            this.dao = new MovieDAO_DB();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        SortedList<Movie> sortedData = new SortedList<>(model.getObservableMovies());
-        sortedData.comparatorProperty().bind(tblMovie.comparatorProperty());
-        // Fill tables with observable data from model
-        tblMovie.setItems(sortedData);
-        lwCategoryFilter.setItems(model.getObservableCategories());
     }
 
     /**
@@ -228,7 +227,7 @@ public class MainWindowController {
      */
     @FXML
     private void onClickDeleteMovie(ActionEvent actionEvent) {
-        Movie selectedMovie = (Movie) tblMovie.getSelectionModel().getSelectedItem();
+        Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
 
         if (selectedMovie != null) {
             try {
@@ -247,9 +246,10 @@ public class MainWindowController {
         txtFieldSearchBar.clear();
         spinnerIMDBSearch.getValueFactory().setValue(0.0);
         spinnerPersonalSearch.getValueFactory().setValue(0.0);
-
+        for (BooleanProperty property : categoryCheckBoxStates.values()) {
+            property.set(false);
+        }
         selectedCategories.clear();
-        lwCategoryFilter.refresh();
     }
 
     /**
@@ -328,5 +328,14 @@ public class MainWindowController {
 
             return row;
         });
+    }
+
+    private void openingReminder() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Reminder To Remove Movies");
+        alert.setHeaderText(null);
+        alert.setContentText("Remember to delete your movies with a personal rating under 6\n" +
+                "and that have not been opened from the application\nin more than 2 years.");
+        alert.showAndWait();
     }
 }
