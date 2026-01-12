@@ -34,7 +34,7 @@
         </TableView>
         <Button layoutX="71.0" layoutY="595.0" mnemonicParsing="false" onAction="#onClickUpdateMovie" prefHeight="26.0" prefWidth="106.0" text="Update Movie" />
         <ListView fx:id="lwCategoryFilter" layoutX="14.0" layoutY="65.0" prefHeight="406.0" prefWidth="164.0" />
-        <Button layoutX="71.0" layoutY="628.0" mnemonicParsing="false" onAction="#onClickRemoveMovie" prefHeight="25.0" prefWidth="106.0" text="Remove Movie" />
+        <Button layoutX="71.0" layoutY="628.0" mnemonicParsing="false" onAction="#onClickDeleteMovie" prefHeight="25.0" prefWidth="106.0" text="Remove Movie" />
         <Button layoutX="65.0" layoutY="478.0" mnemonicParsing="false" onAction="#onClickAddCategory" prefHeight="26.0" prefWidth="114.0" text="Add Category" />
       <Button layoutX="71.0" layoutY="562.0" mnemonicParsing="false" onAction="#onClickAddMovie" prefHeight="26.0" prefWidth="106.0" text="Add Movie" />
       <Button layoutX="65.0" layoutY="512.0" mnemonicParsing="false" onAction="#onClickRemoveCategory" prefHeight="26.0" prefWidth="113.0" text="Remove Category" />
