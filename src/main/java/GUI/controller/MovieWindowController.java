@@ -210,9 +210,9 @@ public class MovieWindowController {
 
         if (file != null) {
             if (file.getName().toLowerCase().endsWith(".mp4") || file.getName().toLowerCase().endsWith(".mpeg4")) {
-                Path dataFolder = Paths.get("data").toAbsolutePath();
+                Path projectRoot = Paths.get("").toAbsolutePath();
                 Path selectedPath = file.toPath().toAbsolutePath();
-                Path relativePath = dataFolder.relativize(selectedPath);
+                Path relativePath = projectRoot.relativize(selectedPath);
                 lblFileSelected.setText(relativePath.toString());
             }
             else {
@@ -263,9 +263,4 @@ public class MovieWindowController {
         }
         return selectedCategories;
     }
-
-    /**
-     *
-     */
-
 }

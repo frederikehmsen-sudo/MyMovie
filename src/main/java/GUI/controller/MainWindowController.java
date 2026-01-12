@@ -12,11 +12,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 public class MainWindowController {
@@ -48,6 +51,8 @@ public class MainWindowController {
         colDirector.setCellValueFactory(new PropertyValueFactory<>("director"));
         colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         colLastViewed.setCellValueFactory(new PropertyValueFactory<>("lastView"));
+
+        titleDoubleClick();
 
         // Spinner initialized
         SpinnerValueFactory<Double> imdbSearchValueFactory
@@ -126,7 +131,7 @@ public class MainWindowController {
      * Deletes the selected movie.
      */
     @FXML
-    private void onClickRemoveMovie(ActionEvent actionEvent) {
+    private void onClickDeleteMovie(ActionEvent actionEvent) {
         Movie selectedMovie = (Movie) tblMovie.getSelectionModel().getSelectedItem();
 
         if (selectedMovie != null) {
@@ -185,5 +190,44 @@ public class MainWindowController {
                 alert.showAndWait();
             }
         }
+    }
+
+    // MEDIA PLAYER
+    private void openInMediaPlayer(String fileLink){
+        try{
+            File file = new File(fileLink);
+
+            if (!file.exists()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Error finding file");
+                alert.showAndWait();
+                return;
+            }
+            Desktop.getDesktop().open(file);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Unable to open the media player");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    private void titleDoubleClick() {
+        tblMovie.setRowFactory(tv -> {
+            TableRow<Movie> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Movie movie = row.getItem();
+                    openInMediaPlayer(movie.getFileLink());
+                }
+            });
+
+            return row;
+        });
     }
 }
