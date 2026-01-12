@@ -178,10 +178,10 @@ public class MovieWindowController {
             // Create new movie
             else {
                 Movie newMovie = new Movie(0, title, imdbRating, fileLink, lastView, personalRating, director, time, year);
-                model.createMovie(newMovie); // Save movie through model
+                Movie createdMovie = model.createMovie(newMovie); // Save movie through model
 
                 List<Category> selectedCategories = getSelectedCategories();
-                model.setCategoriesForMovie(newMovie, selectedCategories);
+                model.setCategoriesForMovie(createdMovie, selectedCategories);
 
                 // Close the window
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -232,7 +232,8 @@ public class MovieWindowController {
     }
 
     /**
-     * Pre-selects categories based on the movie's existing categories
+     * Unselects and selects categories based on the movie's existing categories
+     * Doesn't work properly without
      */
     private void selectCategories(List<Category> categoriesToSelect) {
         // Unselect all
