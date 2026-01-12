@@ -102,7 +102,7 @@ public class MovieModel {
     }
 
     /**
-     * Returns the observable list of categories for UI binding.
+     * Returns the observable list of categories for UI binding.24
      * @return ObservableList<Category>
      */
     public ObservableList<Category> getObservableCategories() {
