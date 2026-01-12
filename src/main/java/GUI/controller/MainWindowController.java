@@ -8,6 +8,7 @@ import GUI.model.MovieModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -48,6 +49,7 @@ public class MainWindowController {
     private MyMovieSearcher searcher;
     @FXML
     private Spinner spinnerPersonalSearch;
+    private final ObservableList<Category> selectedCategories = FXCollections.observableArrayList();
 
     public MainWindowController() {
 
@@ -91,11 +93,16 @@ public class MainWindowController {
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 0.0, 0.1);
         spinnerPersonalSearch.setValueFactory(personalSearchValueFactory);
 
-        lwCategoryFilter.setCellFactory(CheckBoxListCell.forListView(item -> {
-            BooleanProperty selected = new SimpleBooleanProperty();
-            selected.addListener((obs, oldV, newV) ->
-                    System.out.println("Check box for " + item +
-                            " changed from " + oldV + " to " + newV));
+        lwCategoryFilter.setCellFactory(CheckBoxListCell.forListView(category -> {
+            BooleanProperty selected = new SimpleBooleanProperty(false);
+            selected.addListener((obs, wasSelected, isSelected) ->{
+                    if (isSelected) {
+                        selectedCategories.add(category);
+                    } else {
+                        selectedCategories.remove(category);
+                    }
+                    updateFilters();
+            });
             return selected;
         }));
     }
@@ -107,6 +114,8 @@ public class MainWindowController {
         spinnerIMDBSearch.valueProperty().addListener((obs, oldVal, newVal) ->
                 updateFilters());
         spinnerPersonalSearch.valueProperty().addListener((obs, oldVal, newVal) ->
+                updateFilters());
+        lwCategoryFilter.editableProperty().addListener((observable, oldValue, newValue) ->
                 updateFilters());
 
         // Add listener for category selection if needed
@@ -133,6 +142,12 @@ public class MainWindowController {
             Double minRatingPersonal = (Double) spinnerPersonalSearch.getValue();
             if (minRatingPersonal != null && minRatingPersonal > 0.0) {
                 if (movie.getImdbRating() < minRatingPersonal) return false;
+            }
+
+            // Categories filter
+            if(!selectedCategories.isEmpty()){
+                boolean hasSelectedCategory = movie.getCategories().containsAll(selectedCategories);
+                if (!hasSelectedCategory) return false;
             }
 
             // If all filters pass, show the movie
@@ -232,7 +247,9 @@ public class MainWindowController {
         txtFieldSearchBar.clear();
         spinnerIMDBSearch.getValueFactory().setValue(0.0);
         spinnerPersonalSearch.getValueFactory().setValue(0.0);
-        // TODO: Unselect selected categories
+
+        selectedCategories.clear();
+        lwCategoryFilter.refresh();
     }
 
     /**
