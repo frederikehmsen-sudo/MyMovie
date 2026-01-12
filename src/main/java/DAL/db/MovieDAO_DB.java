@@ -150,6 +150,8 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
     public void deleteMovie(int id) throws Exception {
         String sql = "DELETE FROM dbo.Movie WHERE id = ?;";
 
+        removeAllCategoriesFromMovie(id);
+
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -166,7 +168,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
      * Assigns a category to a movie in the junction table
      */
     public void addCategoryToMovie(int movieId, int categoryId) throws Exception {
-        String sql = "INSERT INTO dbo.MovieCategory (movieId, categoryId) VALUES (?, ?);";
+        String sql = "INSERT INTO dbo.CatMovie (movieId, categoryId) VALUES (?, ?);";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -185,7 +187,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
      * Removes a category from a movie in the junction table
      */
     public void removeCategoryFromMovie(int movieId, int categoryId) throws Exception {
-        String sql = "DELETE FROM dbo.MovieCategory WHERE movieId = ? AND categoryId = ?;";
+        String sql = "DELETE FROM dbo.CatMovie WHERE movieId = ? AND categoryId = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -206,7 +208,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
     public List<Category> getCategoriesForMovie(int movieId) throws Exception {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT c.id, c.name FROM Category c " +
-                "INNER JOIN MovieCategory mc ON c.id = mc.categoryId " +
+                "INNER JOIN CatMovie mc ON c.id = mc.categoryId " +
                 "WHERE mc.movieId = ? ORDER BY c.name";
 
         try (Connection conn = databaseConnector.getConnection();
@@ -230,7 +232,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
      * Removes all categories from a movie (useful when updating)
      */
     public void removeAllCategoriesFromMovie(int movieId) throws Exception {
-        String sql = "DELETE FROM dbo.MovieCategory WHERE movieId = ?;";
+        String sql = "DELETE FROM dbo.CatMovie WHERE movieId = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

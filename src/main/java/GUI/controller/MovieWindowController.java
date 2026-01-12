@@ -224,8 +224,8 @@ public class MovieWindowController {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid File");
-            alert.setHeaderText("Only MP4 and MPEG4 files are allowed");
+            alert.setTitle("No File Chosen");
+            alert.setHeaderText("A MP4 or MPEG4 of the movie is needed");
             alert.setContentText("Please choose a file ending with .mp4 or .mpeg4");
             alert.showAndWait();
         }
@@ -263,4 +263,9 @@ public class MovieWindowController {
         }
         return selectedCategories;
     }
+
+    /**
+     *
+     */
+
 }
