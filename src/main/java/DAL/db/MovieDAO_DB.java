@@ -129,7 +129,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
 
     @Override
     public void updateMovie(Movie movie) throws Exception {
-        String sql = "UPDATE dbo.Movie SET title = ?, imdbRating = ?, fileLink = ?, personalRating = ?, director = ?, time = ?, year = ? WHERE id = ?;";
+        String sql = "UPDATE dbo.Movie SET title = ?, imdbRating = ?, fileLink = ?, lastView = ?, personalRating = ?, director = ?, time = ?, year = ? WHERE id = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -137,11 +137,12 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
             stmt.setString(1, movie.getTitle());
             stmt.setFloat(2, movie.getImdbRating());
             stmt.setString(3, movie.getFileLink());
-            stmt.setFloat(4, movie.getPersonalRating());
-            stmt.setString(5, movie.getDirector());
-            stmt.setFloat(6, movie.getTime());
-            stmt.setInt(7, movie.getYear());
-            stmt.setInt(8, movie.getId());
+            stmt.setDate(4, java.sql.Date.valueOf(movie.getLastView()));
+            stmt.setFloat(5, movie.getPersonalRating());
+            stmt.setString(6, movie.getDirector());
+            stmt.setFloat(7, movie.getTime());
+            stmt.setInt(8, movie.getYear());
+            stmt.setInt(9, movie.getId());
 
             stmt.executeUpdate();
         } catch (Exception ex) {
@@ -232,7 +233,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
     }
 
     /**
-     * Removes all categories from a movie (useful when updating)
+     * Removes all categories from a movie
      */
     public void removeAllCategoriesFromMovie(int movieId) throws Exception {
         String sql = "DELETE FROM dbo.CatMovie WHERE movieId = ?;";
