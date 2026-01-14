@@ -1,5 +1,6 @@
 import GUI.controller.MainWindowController;
 import GUI.model.MovieModel;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

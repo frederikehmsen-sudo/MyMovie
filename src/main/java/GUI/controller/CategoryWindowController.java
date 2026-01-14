@@ -3,6 +3,7 @@ package GUI.controller;
 import BE.Category;
 import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

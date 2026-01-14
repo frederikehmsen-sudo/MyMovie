@@ -4,6 +4,7 @@ import BE.Category;
 import BE.Movie;
 import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -61,7 +62,7 @@ public class MainWindowController {
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colImdbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));
         colPersonalRating.setCellValueFactory(new PropertyValueFactory<>("personalRating"));
-        // Skud ud til tutor Ervin og stackoverflow.
+        // Shout out to tutor Ervin and Stackoverflow.
         colCategories.setCellValueFactory((TableColumn.CellDataFeatures<Movie, String> cellData) -> {
             Movie movie = cellData.getValue();
             List<Category> categories = movie.getCategories();
@@ -121,7 +122,6 @@ public class MainWindowController {
         tblMovie.setItems(sortedData);
         lwCategoryFilter.setItems(model.getObservableCategories());
 
-        //Search filter
         searchMovie();
     }
 
@@ -140,7 +140,6 @@ public class MainWindowController {
 
     private void updateFilters() {
         filteredMovies.setPredicate(movie -> {
-            // Text search filter
             String searchText = txtFieldSearchBar.getText();
             if (searchText != null && !searchText.isEmpty()) {
                 String lowerCase = searchText.toLowerCase();
@@ -170,13 +169,6 @@ public class MainWindowController {
             // If all filters pass, show the movie
             return true;
         });
-    }
-
-    private void displayError(Throwable t) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Something went wrong");
-        alert.setHeaderText(t.getMessage());
-        alert.showAndWait();
     }
 
     /**
@@ -306,7 +298,7 @@ public class MainWindowController {
                 return;
             }
             Desktop.getDesktop().open(file);
-            // Updates lastView to todays date
+            // Updates lastView to today's date
             Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
                 selectedMovie.setLastView(LocalDate.now());
                 model.updateMovie(selectedMovie);
@@ -337,10 +329,10 @@ public class MainWindowController {
 
     private void openingReminder() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Reminder To Remove Movies");
+        alert.setTitle("Reminder");
         alert.setHeaderText(null);
         alert.setContentText("Remember to delete your movies with a personal rating under 6\n" +
-                "and that have not been opened from the application\nin more than 2 years.");
+                "and that have not been opened from the application\nin more than 2 years.\n\n" + "Double click a movie to play it! 😎");
         alert.showAndWait();
     }
 }

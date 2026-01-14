@@ -4,6 +4,7 @@ import BE.Category;
 import BE.Movie;
 import DAL.db.MovieDAO_DB;
 import GUI.model.MovieModel;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -173,7 +174,6 @@ public class MovieWindowController {
 
                 editingMovie.setCategories(selectedCategories);
 
-                // Close the window
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();
             }
@@ -187,7 +187,6 @@ public class MovieWindowController {
 
                 createdMovie.setCategories(selectedCategories);
 
-                // Close the window
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();
             }

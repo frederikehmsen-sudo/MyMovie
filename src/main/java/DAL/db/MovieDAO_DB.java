@@ -188,25 +188,6 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
     }
 
     /**
-     * Removes a category from a movie in the junction table
-     */
-    public void removeCategoryFromMovie(int movieId, int categoryId) throws Exception {
-        String sql = "DELETE FROM dbo.CatMovie WHERE movieId = ? AND categoryId = ?;";
-
-        try (Connection conn = databaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, movieId);
-            stmt.setInt(2, categoryId);
-            stmt.executeUpdate();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Exception("Could not remove category from movie", ex);
-        }
-    }
-
-    /**
      * Gets all categories assigned to a specific movie
      */
     public List<Category> getCategoriesForMovie(int movieId) throws Exception {

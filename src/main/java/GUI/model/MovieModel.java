@@ -3,6 +3,7 @@ package GUI.model;
 import BE.Category;
 import BE.Movie;
 import BLL.MovieManager;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -103,14 +104,6 @@ public class MovieModel {
     }
 
     // CATEGORY ON MOVIES
-    public void addCategoryToMovie(Movie movie, Category category) throws Exception {
-        movieManager.addCategoryToMovie(movie, category);
-    }
-
-    public void removeCategoryFromMovie(Movie movie, Category category) throws Exception {
-        movieManager.removeCategoryFromMovie(movie, category);
-    }
-
     public List<Category> getCategoriesForMovie(Movie movie) throws Exception {
         return movieManager.getCategoriesForMovie(movie);
     }

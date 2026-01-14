@@ -2,7 +2,6 @@ package BLL;
 
 import BE.Category;
 import BE.Movie;
-import BLL.util.MyMovieSearcher;
 import DAL.ICategoryDataAccess;
 import DAL.ICategoryOnMovieDataAccess;
 import DAL.IMovieDataAccess;
@@ -21,7 +20,6 @@ public class MovieManager {
     private IMovieDataAccess movieDataAccess;
     private ICategoryDataAccess categoryDataAccess;
     private ICategoryOnMovieDataAccess categoryOnMovieDataAccess;
-    private MyMovieSearcher movieSearcher;
 
     public MovieManager() throws Exception {
         movieDataAccess = new MovieDAO_DB();
@@ -33,12 +31,6 @@ public class MovieManager {
     public List<Movie> getAllMovies() throws Exception {
         return movieDataAccess.getAllMovies();
     }
-
-    /*public List<Movie> searchMovie(String query) throws Exception {
-        List<Movie> allSongs = getAllMovies();
-        List<Movie> searchResult = movieSearcher.search(allSongs, query);
-        return searchResult;
-        }*/
 
     public Movie createMovie(Movie newMovie) throws Exception {
         return movieDataAccess.createMovie(newMovie);
@@ -66,13 +58,6 @@ public class MovieManager {
     }
 
     // Categories on Movies
-    public void addCategoryToMovie(Movie movie, Category category) throws Exception {
-        categoryOnMovieDataAccess.addCategoryToMovie(movie.getId(), category.getId());
-    }
-
-    public void removeCategoryFromMovie(Movie movie, Category category) throws Exception {
-        categoryOnMovieDataAccess.removeCategoryFromMovie(movie.getId(), category.getId());
-    }
 
     public List<Category> getCategoriesForMovie(Movie movie) throws Exception {
         return categoryOnMovieDataAccess.getCategoriesForMovie(movie.getId());
