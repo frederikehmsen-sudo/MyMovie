@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class MainWindowController {
 
     @FXML private TableView<Movie> tblMovie;
@@ -45,6 +44,7 @@ public class MainWindowController {
     @FXML private TableColumn<Movie, String> colTitle;
 
     @FXML private ListView<Category> lwCategoryFilter;
+    @FXML private Spinner<Double> spinnerPersonalSearch;
     @FXML private Spinner<Double> spinnerIMDBSearch;
     @FXML private TextField txtFieldSearchBar;
 
@@ -53,8 +53,6 @@ public class MainWindowController {
     private MovieModel model;
     private MovieDAO_DB dao;
 
-    @FXML
-    private Spinner spinnerPersonalSearch;
     private final ObservableList<Category> selectedCategories = FXCollections.observableArrayList();
 
     public void initialize() {
@@ -332,7 +330,8 @@ public class MainWindowController {
         alert.setTitle("Reminder");
         alert.setHeaderText(null);
         alert.setContentText("Remember to delete your movies with a personal rating under 6\n" +
-                "and that have not been opened from the application\nin more than 2 years.\n\n" + "Double click a movie to play it! 😎");
+                "and that have not been opened from the application\nin more than 2 years.\n\n" +
+                "Double click on a movie to play it! 😎\n" + "Sort movies by clicking on the column headers.");
         alert.showAndWait();
     }
 }

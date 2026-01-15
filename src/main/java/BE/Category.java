@@ -27,10 +27,10 @@ public class Category {
         return name;
     }
 
-    /** [Notes for difficult code]
+    /** [Notes for stackoverflow code]
      * Allows HashMap to match categories by id instead of memory address.
      * Categories loaded at different times are treated as different objects without this.
-     * (Basically makes sure our checkbox selection won't break and gets the categories on update movie)
+     * (Basically helps making sure our checkbox selection won't break and gets the categories on update movie)
      * @param o   the reference object with which to compare.
      * @return
      */

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class MovieModel {
+
     private MovieManager movieManager; // Reference to business logic manager
     private ObservableList<Movie> movies; // Observable list of all movies
     private ObservableList<Category> categories; // Observable list of all categories

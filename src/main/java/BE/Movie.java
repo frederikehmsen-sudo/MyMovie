@@ -11,12 +11,12 @@ public class Movie {
     private float personalRating;
     private String fileLink;
     private LocalDate lastView;
-    private float time;
+    private int time;
     private String director;
     private int year;
     private List<Category> categories;
 
-    public Movie(int id, String title, float imdbRating, String fileLink, LocalDate lastView, float personalRating, String director, float time, int year) {
+    public Movie(int id, String title, float imdbRating, String fileLink, LocalDate lastView, float personalRating, String director, int time, int year) {
         this.id = id;
         this.title = title;
         this.imdbRating = imdbRating;
@@ -92,7 +92,7 @@ public class Movie {
         this.lastView = lastView;
     }
 
-    public void setTime(float time) {
+    public void setTime(int time) {
         this.time = time;
     }
 

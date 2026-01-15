@@ -58,7 +58,6 @@ public class MovieManager {
     }
 
     // Categories on Movies
-
     public List<Category> getCategoriesForMovie(Movie movie) throws Exception {
         return categoryOnMovieDataAccess.getCategoriesForMovie(movie.getId());
     }

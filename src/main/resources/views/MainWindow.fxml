@@ -19,14 +19,14 @@
         <TextField fx:id="txtFieldSearchBar" layoutX="59.0" layoutY="12.0" prefHeight="26.0" prefWidth="456.0" />
         <TableView fx:id="tblMovie" layoutX="192.0" layoutY="65.0" prefHeight="589.0" prefWidth="867.0">
             <columns>
-                <TableColumn fx:id="colTitle" prefWidth="143.19998168945312" text="Title" />
-                <TableColumn fx:id="colYear" minWidth="8.800048828125" prefWidth="48.79998779296875" text="Year" />
-                <TableColumn fx:id="colImdbRating" prefWidth="81.5999755859375" text="IMDB Rating" />
-                <TableColumn fx:id="colPersonalRating" prefWidth="99.20001220703125" text="Personal Rating" />
-                <TableColumn fx:id="colCategories" prefWidth="165.60003662109375" text="Categories" />
-                <TableColumn fx:id="colDirector" prefWidth="178.39996337890625" text="Director" />
-                <TableColumn fx:id="colLastViewed" prefWidth="78.4000244140625" text="Last Viewed" />
-                <TableColumn fx:id="colTime" prefWidth="54.4000244140625" text="Time" />
+                <TableColumn fx:id="colTitle" prefWidth="143.19998168945312" text="Title" reorderable="false" />
+                <TableColumn fx:id="colYear" minWidth="8.800048828125" prefWidth="48.79998779296875" text="Year" reorderable="false" />
+                <TableColumn fx:id="colImdbRating" prefWidth="81.5999755859375" text="IMDB Rating" reorderable="false" />
+                <TableColumn fx:id="colPersonalRating" prefWidth="99.20001220703125" text="Personal Rating" reorderable="false" />
+                <TableColumn fx:id="colCategories" prefWidth="165.60003662109375" text="Categories" reorderable="false" />
+                <TableColumn fx:id="colDirector" prefWidth="178.39996337890625" text="Director" reorderable="false" />
+                <TableColumn fx:id="colLastViewed" prefWidth="78.4000244140625" text="Last Viewed" reorderable="false" />
+                <TableColumn fx:id="colTime" prefWidth="54.4000244140625" text="Time" reorderable="false" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
