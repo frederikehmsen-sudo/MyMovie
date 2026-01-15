@@ -52,7 +52,7 @@ public class Movie {
         return lastView;
     }
 
-    public float getTime() {
+    public int getTime() {
         return time;
     }
 

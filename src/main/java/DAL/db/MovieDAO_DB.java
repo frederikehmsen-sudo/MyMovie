@@ -86,7 +86,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
             stmt.setDate(4, java.sql.Date.valueOf(newMovie.getLastView()));
             stmt.setFloat(5, newMovie.getPersonalRating());
             stmt.setString(6, newMovie.getDirector());
-            stmt.setFloat(7, newMovie.getTime());
+            stmt.setInt(7, newMovie.getTime());
             stmt.setInt(8, newMovie.getYear());
 
             stmt.executeUpdate();
@@ -115,7 +115,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
             while (rs.next()) {
                 Movie movie = new Movie(rs.getInt("id"), rs.getString("title"), rs.getFloat("imdbRating"),
                         rs.getString("fileLink"), rs.getDate("lastView").toLocalDate(), rs.getFloat("personalRating"),
-                        rs.getString("director"), rs.getFloat("time"), rs.getInt("year"));
+                        rs.getString("director"), rs.getInt("time"), rs.getInt("year"));
                 // Load categories for a movie (all movies)
                 movie.setCategories(getCategoriesForMovie(movie.getId()));
                 movies.add(movie);
@@ -140,7 +140,7 @@ public class MovieDAO_DB implements ICategoryDataAccess, IMovieDataAccess, ICate
             stmt.setDate(4, java.sql.Date.valueOf(movie.getLastView()));
             stmt.setFloat(5, movie.getPersonalRating());
             stmt.setString(6, movie.getDirector());
-            stmt.setFloat(7, movie.getTime());
+            stmt.setInt(7, movie.getTime());
             stmt.setInt(8, movie.getYear());
             stmt.setInt(9, movie.getId());
 

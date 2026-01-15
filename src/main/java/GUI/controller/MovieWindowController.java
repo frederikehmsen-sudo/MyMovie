@@ -132,11 +132,11 @@ public class MovieWindowController {
         }
 
         int year;
-        float time;
+        int time;
 
         try {
             year = Integer.parseInt(yearText);
-            time = Float.parseFloat(timeText);
+            time = Integer.parseInt(timeText);
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");

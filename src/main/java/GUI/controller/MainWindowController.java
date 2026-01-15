@@ -34,7 +34,7 @@ import java.util.Map;
 public class MainWindowController {
 
     @FXML private TableView<Movie> tblMovie;
-    @FXML private TableColumn<Movie, Float> colTime;
+    @FXML private TableColumn<Movie, Integer> colTime;
     @FXML private TableColumn<Movie, java.time.LocalDate> colLastViewed;
     @FXML private TableColumn<Movie, String> colDirector;
     @FXML private TableColumn<Movie, String> colCategories;
